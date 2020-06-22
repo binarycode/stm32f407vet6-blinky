@@ -1,11 +1,12 @@
 PROJECT        = blinky
-CFILES         = blinky.c
 DEVICE         = stm32f407vet6
 OOCD_INTERFACE = stlink-v2
 OOCD_TARGET    = stm32f4x
 OPENCM3_DIR    = libopencm3
 OPENCM3_DEFS   = -DSTM32F4
+FREERTOS_DIR   = freertos
 ARCH_FLAGS     = -mthumb -mcpu=cortex-m4
+CFILES         = blinky.c $(FREERTOS_DIR)/tasks.c $(FREERTOS_DIR)/list.c $(FREERTOS_DIR)/portable/GCC/ARM_CM4F/port.c $(FREERTOS_DIR)/portable/MemMang/heap_4.c
 BUILD_DIR      = bin
 OPT            = -Os
 CSTD           = -std=c99
@@ -28,7 +29,9 @@ OBJCOPY = $(PREFIX)objcopy
 OBJDUMP = $(PREFIX)objdump
 OOCD    = openocd
 
+INCLUDES += -I.
 INCLUDES += -I$(OPENCM3_DIR)/include
+INCLUDES += -I$(FREERTOS_DIR)/include -I$(FREERTOS_DIR)/portable/GCC/ARM_CM4F -I$(FREERTOS_DIR)/freertos/portable/MemMang
 
 OBJS = $(CFILES:%.c=$(BUILD_DIR)/%.o)
 OBJS += $(AFILES:%.S=$(BUILD_DIR)/%.o)
